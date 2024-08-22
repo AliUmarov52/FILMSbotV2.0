@@ -91,12 +91,19 @@ def welcome(message):
     button6 = types.InlineKeyboardButton('Настройки', callback_data='Настройки') 
     markup.add(button5) 
     markup.add(button1, button2, button4) 
-    markup.add(button3, button6)  # Главные кнопки меню 
+    markup.add(button3, button6)  # Главные кнопки меню
+    
+    chat_id = call.message.chat.id  
+    channel1 = "-1002219725769" # ID первого канала
+    if check_subscription(chat_id, channel1):
+        bot.send_message(message.chat.id, f'Привет, КИНОМАН!\nМеня зовут ФИЛЬМОБОТ и я твой проводник в мир кино и сериалов :)\nДля начала выбери способ поиска фильма в меню ниже: ', reply_markup=markup) 
+    else:  
+        bot.send_message(chat_id, "Подпишитесь на канал, чтобы использовать бота.", reply_markup=start_markup()) 
 
-    bot.send_message(message.chat.id, f'Привет, КИНОМАН!\nМеня зовут ФИЛЬМОБОТ и я твой проводник в мир кино и сериалов :)\nДля начала выбери способ поиска фильма в меню ниже: ', reply_markup=markup) 
 
-
-def welcome1(message):  
+def welcome1(message):
+    chat_id = call.message.chat.id  
+    channel1 = "-1002219725769" # ID первого канала
     markup = types.InlineKeyboardMarkup(row_width=2) 
     button1 = types.InlineKeyboardButton('Поиск по жанрам', callback_data='Поиск по жанрам') 
     button2 = types.InlineKeyboardButton('Поиск по коду', callback_data='Поиск по коду') 
@@ -108,29 +115,36 @@ def welcome1(message):
     markup.add(button1, button2, button4) 
     markup.add(button3, button6)  # Главные кнопки меню 
 
-    bot.send_message(message.chat.id, "Вы переместились в главное меню. Выберите опцию ниже: ", reply_markup=markup)
+    if check_subscription(chat_id, channel1):
+        bot.send_message(message.chat.id, "Вы переместились в главное меню. Выберите опцию ниже: ", reply_markup=markup)
+    else:  
+        bot.send_message(chat_id, "Подпишитесь на канал, чтобы использовать бота.", reply_markup=start_markup()) 
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def info(call):
-    if call.data == 'Поиск по коду':
-        bot.send_message(call.message.chat.id, "Введите номер фильма:")
-        bot.register_next_step_handler(call.message, search)
-    elif call.data == 'ТГК с фильмами':
-        tgk(call.message)
-    elif call.data == 'Настройки':
-        settings(call.message)
-    elif call.data == 'Поиск по жанрам':
-        bot.send_message(call.message.chat.id, "Введите жанр фильма:\n\nДоступные жанры: Драма, Ужасы, Фантастика, Комедия, Романтика, Вестерн, Криминал, Боевик, Триллер, Биография\n\nP.s Вводите жанр правильно")
-        bot.register_next_step_handler(call.message, searchGenre)  # Возвращаемся в главное меню
-    elif call.data == 'Поиск по названию':
-        bot.send_message(call.message.chat.id, "Введите название фильма:")
-        bot.register_next_step_handler(call.message, searchName)
-    elif call.data == 'Новинки 2024':
-        newFilms(call.message)
-    else:
-        welcome1(call.message)
-
+    chat_id = call.message.chat.id  
+    channel1 = "-1002219725769" # ID первого канала
+    if check_subscription(chat_id, channel1):
+        if call.data == 'Поиск по коду':
+            bot.send_message(call.message.chat.id, "Введите номер фильма:")
+            bot.register_next_step_handler(call.message, search)
+        elif call.data == 'ТГК с фильмами':
+            tgk(call.message)
+        elif call.data == 'Настройки':
+            settings(call.message)
+        elif call.data == 'Поиск по жанрам':
+            bot.send_message(call.message.chat.id, "Введите жанр фильма:\n\nДоступные жанры: Драма, Ужасы, Фантастика, Комедия, Романтика, Вестерн, Криминал, Боевик, Триллер, Биография\n\nP.s Вводите жанр правильно")
+            bot.register_next_step_handler(call.message, searchGenre)  # Возвращаемся в главное меню
+        elif call.data == 'Поиск по названию':
+            bot.send_message(call.message.chat.id, "Введите название фильма:")
+            bot.register_next_step_handler(call.message, searchName)
+        elif call.data == 'Новинки 2024':
+            newFilms(call.message)
+        else:
+            welcome1(call.message)
+    else:  
+        bot.send_message(chat_id, "Подпишитесь на канал, чтобы использовать бота.", reply_markup=start_markup()) 
 
 my_dict = {
     1: {
@@ -140,7 +154,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "1",
         "Ссылка": "https://t.me/c/2178525944/17",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=6ybBuTETr3U",
         "Скачать": ""
         
     },
@@ -151,7 +165,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "2",
         "Ссылка": "https://t.me/c/2178525944/19",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=85Zz1CCXyDI",
         "Скачать": ""
         
     },
@@ -162,7 +176,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "3",
         "Ссылка": "https://t.me/c/2178525944/21",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=YihPA42fdQ8",
         "Скачать": ""
         
     },
@@ -173,7 +187,7 @@ my_dict = {
         "Жанр": "Драма",
         "Код": "4",
         "Ссылка": "https://t.me/c/2178525944/23",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=kgAeKpAPOYk",
         "Скачать": ""
         
     },
@@ -184,7 +198,7 @@ my_dict = {
         "Жанр": "Ужасы",
         "Код": "5",
         "Ссылка": "https://t.me/c/2178525944/25",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=bDj1El1Sr5A",
         "Скачать": ""
         
     }, 
@@ -195,7 +209,7 @@ my_dict = {
         "Жанр" : "Комедия",
         "Код": "6",
         "Ссылка": "https://t.me/c/2178525944/27",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=zd__P3giExg",
         "Скачать": ""
         
     },
@@ -206,7 +220,7 @@ my_dict = {
         "Жанр": "Романтика",
         "Код": "7",
         "Ссылка": "https://t.me/c/2178525944/29",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=MgVBTUJgsUs",
         "Скачать": ""
     },
     8: {
@@ -216,7 +230,7 @@ my_dict = {
         "Жанр": "Ужасы",
         "Код": "8",
         "Ссылка": "https://t.me/c/2178525944/31",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=evQ3yB8JbHA",
         "Скачать": ""
         
     },
@@ -226,7 +240,7 @@ my_dict = {
         "Жанр": "Ужасы",
         "Код": "9",
         "Ссылка": "https://t.me/c/2178525944/33",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=z6pIZ5Vg3Qw",
         "Скачать": ""
         
     },
@@ -236,7 +250,7 @@ my_dict = {
         "Жанр": "Ужасы",
         "Код": "10",
         "Ссылка": "https://t.me/c/2178525944/35",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=vkJQxqJwNhs",
         "Скачать": ""
         
     },
@@ -246,7 +260,7 @@ my_dict = {
         "Жанр": "Комедия",
         "Код": "11",
         "Ссылка": "https://t.me/c/2178525944/37",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=s_rt7udDnOQ",
         "Скачать": ""
         
     },
@@ -256,7 +270,7 @@ my_dict = {
         "Жанр": "Комедия",
         "Код": "12",
         "Ссылка": "https://t.me/c/2178525944/39",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=vE-43jSiHx8",
         "Скачать": ""
     },
     13: {"Название": "Не грози южному централу, попивая сок у себя в квартале",
@@ -265,7 +279,7 @@ my_dict = {
         "Жанр": "Комедия",
         "Код": "13",
         "Ссылка": "https://t.me/c/2178525944/41",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=9hvlUW7Q68k",
         "Скачать": ""
     },
     14: {"Название": "Один дома",
@@ -274,7 +288,7 @@ my_dict = {
         "Жанр": "Комедия",
         "Код": "14",
         "Ссылка": "https://t.me/c/2178525944/42",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=NrCI4QXlpis",
         "Скачать": ""
     },
     15: {"Название": "Большой Лебовски",
@@ -283,7 +297,7 @@ my_dict = {
         "Жанр": "Комедия",
         "Код": "15",
         "Ссылка": "https://t.me/c/2178525944/43",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=o6lZhTdzhK8",
         "Скачать": ""
     },
     16: {"Название": "1+1",
@@ -292,7 +306,7 @@ my_dict = {
         "Жанр": "Драма",
         "Код": "16",
         "Ссылка": "https://t.me/c/2178525944/47",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=m95M-I7Ij0o",
         "Скачать": ""
     },
     17: {"Название": "Джанго освобожденный",
@@ -301,7 +315,7 @@ my_dict = {
         "Жанр": "Вестерн",
         "Код": "17",
         "Ссылка": "hhttps://t.me/c/2178525944/48",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=4McenUEna3E",
         "Скачать": ""
     },
     18: {"Название": "Хранители",
@@ -310,7 +324,7 @@ my_dict = {
         "Жанр": "Боевик",
         "Код": "18",
         "Ссылка": "https://t.me/c/2178525944/52",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=12q2pDWPuyI",
         "Скачать": ""
     },
     19: {"Название": "Зелёная миля",
@@ -319,7 +333,7 @@ my_dict = {
         "Жанр": "Драма",
         "Код": "19",
         "Ссылка": "https://t.me/c/2178525944/53",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=TODt_q-_4C4",
         "Скачать": ""
     },
     20: {"Название": "Достучаться до небес",
@@ -328,7 +342,7 @@ my_dict = {
         "Жанр": "Драма",
         "Код": "20",
         "Ссылка": "https://t.me/c/2178525944/54",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=Slm8s89WTOo",
         "Скачать": ""
     },
     21: {"Название": "Леон",
@@ -337,7 +351,7 @@ my_dict = {
         "Жанр": "Драма",
         "Код": "21",
         "Ссылка": "https://t.me/c/2178525944/55",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=hvya_q8KM80",
         "Скачать": ""
     },
     22: {"Название": "Гладиатор",
@@ -346,7 +360,7 @@ my_dict = {
         "Жанр": "Драма",
         "Код": "22",
         "Ссылка": "https://t.me/c/2178525944/56",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=F2Dr7Qb2Zf8",
         "Скачать": ""
         
     },
@@ -356,7 +370,7 @@ my_dict = {
         "Жанр": "Криминал",
         "Код": "23",
         "Ссылка": "https://t.me/c/2178525944/57",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=E3b9jVCUh7Q",
         "Скачать": ""
         
     },
@@ -366,7 +380,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "24",
         "Ссылка": "https://t.me/c/2178525944/58",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=ou8w0gQHlRE",
         "Скачать": ""
         
     },
@@ -376,7 +390,7 @@ my_dict = {
         "Жанр": "Драма",
         "Код": "25",
         "Ссылка": "https://t.me/c/2178525944/59",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=C7-7qQ61QHU",
         "Скачать": ""
         
     },
@@ -386,17 +400,17 @@ my_dict = {
         "Жанр": "Триллер",
         "Код": "26",
         "Ссылка": "https://t.me/c/2178525944/60",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=_l7R9Rz5URw",
         "Скачать": ""
         
     },
-    27: {"Название": "Поймай мне, если ты взрослый",
+    27: {"Название": "Поймай мне, если сможешь",
         "Описание": "Фрэнку едва исполнилось 17, и он уже умелый фальшивомонетчик, успевший выдать себя за врача, юриста и пилота. Агент ФБР, Карл, становится одержим идеей выследить мошенника, который только наслаждается погоней.",
         "Больше информации о фильме": "https://www.imdb.com/title/tt0264464/",
         "Жанр": "Криминал",
         "Код": "27",
         "Ссылка": "https://t.me/c/2178525944/62",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=nH3wJYOlXYw",
         "Скачать": ""
         
     },
@@ -406,7 +420,7 @@ my_dict = {
         "Жанр": "Триллер",
         "Код": "28",
         "Ссылка": "https://t.me/c/2178525944/63",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=m8Da_mQKd_8",
         "Скачать": ""
         
     },      
@@ -417,7 +431,7 @@ my_dict = {
         "Жанр": "Боевик",
         "Код": "29",
         "Ссылка": "https://t.me/c/2178525944/64",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=mU0DdjbF8IQ",
         "Скачать": ""
     },
     30: {
@@ -428,7 +442,7 @@ my_dict = {
         "Код": "30",
         "Ссылка": "https://t.me/c/2178525944/65",
         "Новинки": "Новинки",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=7G9nzhszvGs",
         "Скачать": ""
     },
     31: {
@@ -439,18 +453,18 @@ my_dict = {
         "Код": "31",
         "Ссылка": "https://t.me/c/2178525944/66",
         "Новинки": "Новинки",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=xbSLz5lR520",
         "Скачать": ""
     }, 
     
    32:  {
-       "Название": "Blade Runner 2049",
+       "Название": "Бегущий по лезвию 2049",
         "Описание": "Офицер полиции К находит давно похищенного бывшего Репликанта, что ставит под угрозу все живое.",
         "Больше информации о фильме": "https://www.imdb.com/title/tt1856101/",
         "Жанр": "Фантастика",
         "Код": "32",
         "Ссылка": "https://t.me/c/2178525944/67",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=taQW31SVPCk",
         "Скачать": ""
     },
     33: {
@@ -460,7 +474,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "33",
         "Ссылка": "https://t.me/c/2178525944/68",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=tvkoZF1BMec",
         "Скачать": ""
     },
     34: {
@@ -470,7 +484,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "34",
         "Ссылка": "https://t.me/c/2178525944/69",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=OZ-64FmA8WY",
         "Скачать": ""
     },
     35: {
@@ -480,7 +494,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "35",
         "Ссылка": "https://t.me/c/2178525944/70",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=BzllHdG9C8g",
         "Скачать": ""
     },
     36: {
@@ -490,7 +504,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "36",
         "Ссылка": "https://t.me/c/2178525944/72",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=6acW6-dmxKs",
         "Скачать": ""
     },
     37: {
@@ -500,7 +514,7 @@ my_dict = {
         "Жанр": "Фантастика",
         "Код": "37",
         "Ссылка": "https://t.me/c/2178525944/73",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=kJOoglkhJJ4",
         "Скачать": ""
     },
     38: {
@@ -511,7 +525,7 @@ my_dict = {
         "Код": "38",
         "Ссылка": "https://t.me/c/2178525944/74",
         "Новинки": "Новинки",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=uTfkgia3BxQ",
         "Скачать": ""
     },
     39: {
@@ -522,7 +536,7 @@ my_dict = {
         "Код": "39",
         "Ссылка": "https://ify.ac/1Lom",
         "Новинки": "Новинки",
-        "Трейлер": "",
+        "Трейлер": "https://www.youtube.com/watch?v=9BqNyhVvsnk",
         "Скачать": ""
     },
     40: {
@@ -540,41 +554,46 @@ my_dict = {
 showed_movies = {} 
 
 def search(message):
+    chat_id = call.message.chat.id  
+    channel1 = "-1002219725769" # ID первого канала
     markup = types.InlineKeyboardMarkup(row_width=1)
     button1 = types.InlineKeyboardButton('↩️ Назад в меню', callback_data='return_to_menu')
+    if check_subscription(chat_id, channel1):
+        try:
+            n = int(message.text)  # Получаем число из сообщения
 
-    try:
-        n = int(message.text)  # Получаем число из сообщения
+            if n in my_dict:
+                movie = my_dict[n]
+                button2 = types.InlineKeyboardButton('Смотреть бесплатно', url=movie["Ссылка"])
+                button3 = types.InlineKeyboardButton('Трейлер', url=movie["Трейлер"])
+                button4 = types.InlineKeyboardButton('Скачать',url=movie["Скачать"])  # Ссылка из словаря
 
-        if n in my_dict:
-            movie = my_dict[n]
-            button2 = types.InlineKeyboardButton('Смотреть бесплатно', url=movie["Ссылка"])
-            button3 = types.InlineKeyboardButton('Трейлер', url=movie["Трейлер"])
-            button4 = types.InlineKeyboardButton('Скачать',url=movie["Скачать"])  # Ссылка из словаря
-
-            markup.add(button2, button3, button1)
-            markup.add(button4)  # Добавляем кнопки в нужном порядке
+                markup.add(button2, button3, button1)
+                markup.add(button4)  # Добавляем кнопки в нужном порядке
             
-            response = (f"Название: {movie['Название']}\n\n"
-                        f"Описание: {movie['Описание']}\n\n"
-                        f"Больше информации о фильме: {movie['Больше информации о фильме']}\n\n"
-                        f"Код фильма: {movie['Код']}")
-            bot.send_message(message.chat.id, response, reply_markup=markup)
-        else:
-            markup.add(button1)  # Добавляем кнопку "Назад в меню", если фильм не найден
-            bot.send_message(message.chat.id, "Фильм не найден. Пожалуйста, попробуйте другой номер.", reply_markup=markup)
+                response = (f"Название: {movie['Название']}\n\n"
+                            f"Описание: {movie['Описание']}\n\n"
+                            f"Больше информации о фильме: {movie['Больше информации о фильме']}\n\n"
+                            f"Код фильма: {movie['Код']}")
+                bot.send_message(message.chat.id, response, reply_markup=markup)
+            else:
+                markup.add(button1)  # Добавляем кнопку "Назад в меню", если фильм не найден
+                bot.send_message(message.chat.id, "Фильм не найден. Пожалуйста, попробуйте другой номер.", reply_markup=markup)
 
-    except ValueError:
-        markup.add(button1)  # Добавляем кнопку "Назад в меню", если введено некорректное значение
-        bot.send_message(message.chat.id, "Пожалуйста, введите корректное числовое значение.", reply_markup=markup)
-
+        except ValueError:
+            markup.add(button1)  # Добавляем кнопку "Назад в меню", если введено некорректное значение
+            bot.send_message(message.chat.id, "Пожалуйста, введите корректное числовое значение.", reply_markup=markup)
+    else:  
+        bot.send_message(chat_id, "Подпишитесь на канал, чтобы использовать бота.", reply_markup=start_markup()) 
         
 
 
 def searchGenre(message): 
     global showed_movies
     user_id = message.chat.id
-
+    chat_id = call.message.chat.id  
+    channel1 = "-1002219725769" # ID первого канала
+    
     if user_id not in showed_movies:
         showed_movies[user_id] = []
 
@@ -623,9 +642,10 @@ def searchGenre(message):
 
     else:
         response = "Пожалуйста, выберите другой жанр."
-
-    bot.send_message(message.chat.id, response, reply_markup=markup)
-
+    if check_subscription(chat_id, channel1):
+        bot.send_message(message.chat.id, response, reply_markup=markup)
+    else:  
+        bot.send_message(chat_id, "Подпишитесь на канал, чтобы использовать бота.", reply_markup=start_markup())
 
 def searchName(message):
     markup = types.InlineKeyboardMarkup(row_width=2)
@@ -633,52 +653,61 @@ def searchName(message):
     markup.add(button1)
     movie_name = message.text.lower()
     movie_found = False
+    chat_id = call.message.chat.id  
+    channel1 = "-1002219725769" # ID первого канала
 
-    for movie in my_dict.values():
-        if movie["Название"].lower() == movie_name:
-            response = f"Название: {movie['Название']}\n\nОписание: {movie['Описание']}\n\nБольше информации о фильме: {movie['Больше информации о фильме']}\nЖанр: {movie['Жанр']}\n\nКод фильма: {movie['Код']}"
+    if check_subscription(chat_id, channel1):
+        for movie in my_dict.values():
+            if movie["Название"].lower() == movie_name:
+                response = f"Название: {movie['Название']}\n\nОписание: {movie['Описание']}\n\nБольше информации о фильме: {movie['Больше информации о фильме']}\nЖанр: {movie['Жанр']}\n\nКод фильма: {movie['Код']}"
             
-            button2 = types.InlineKeyboardButton('Смотреть бесплатно', url=movie['Ссылка'])
-            button3 = types.InlineKeyboardButton('Трейлер', url=movie["Трейлер"])
-            button4 = types.InlineKeyboardButton('Скачать фильм', url=movie["Скачать"])  # Ссылка из словаря
-            markup.add(button2, button3)
-            markup.add(button4)
+                button2 = types.InlineKeyboardButton('Смотреть бесплатно', url=movie['Ссылка'])
+                button3 = types.InlineKeyboardButton('Трейлер', url=movie["Трейлер"])
+                button4 = types.InlineKeyboardButton('Скачать фильм', url=movie["Скачать"])  # Ссылка из словаря
+                markup.add(button2, button3)
+                markup.add(button4)
             
-            bot.send_message(message.chat.id, response, reply_markup=markup)
-            movie_found = True
-            break  # Выходим из цикла, как только находим фильм
+                bot.send_message(message.chat.id, response, reply_markup=markup)
+                movie_found = True
+                break  # Выходим из цикла, как только находим фильм
     
-    if not movie_found:
-        bot.send_message(message.chat.id, "Фильм не был найден", reply_markup=markup)
-
+        if not movie_found:
+            bot.send_message(message.chat.id, "Фильм не был найден", reply_markup=markup)
+    else:  
+        bot.send_message(chat_id, "Подпишитесь на канал, чтобы использовать бота.", reply_markup=start_markup())
 
 def newFilms(message):
     markup = types.InlineKeyboardMarkup(row_width=1)
     button1 = types.InlineKeyboardButton('↩️ Назад в меню', callback_data='return_menu')
     markup.add(button1)
-
+    chat_id = call.message.chat.id  
+    channel1 = "-1002219725769" # ID первого канала
+    
     # Создаем список новинок
     new_movies = [movie for movie in my_dict.values() if movie.get('Новинки') == 'Новинки']
     
     # Проверяем, есть ли новинки
-    if new_movies:
-        # Выбираем случайный фильм
-        movie = random.choice(new_movies)
-        response = (f"Название: {movie['Название']}\n\n"
-                    f"Описание: {movie['Описание']}\n\n"
-                    f"Больше информации о фильме: {movie['Больше информации о фильме']}\n"
-                    f"Жанр: {movie['Жанр']}\n\n"
-                    f"Код фильма: {movie['Код']}\n\n")
-        button2 = types.InlineKeyboardButton('Смотреть бесплатно', url=movie['Ссылка'])
-        button3 = types.InlineKeyboardButton('Трейлер', url=movie["Трейлер"])
-        button4 = types.InlineKeyboardButton('Скачать фильм', url=movie["Скачать"])  # Ссылка из словаря
-        markup.add(button1, button2)
-        markup.add(button3, button4)
+    if check_subscription(chat_id, channel1):
+        if new_movies:
+            # Выбираем случайный фильм
+            movie = random.choice(new_movies)
+            response = (f"Название: {movie['Название']}\n\n"
+                        f"Описание: {movie['Описание']}\n\n"
+                        f"Больше информации о фильме: {movie['Больше информации о фильме']}\n"
+                        f"Жанр: {movie['Жанр']}\n\n"
+                        f"Код фильма: {movie['Код']}\n\n")
+            button2 = types.InlineKeyboardButton('Смотреть бесплатно', url=movie['Ссылка'])
+            button3 = types.InlineKeyboardButton('Трейлер', url=movie["Трейлер"])
+            button4 = types.InlineKeyboardButton('Скачать фильм', url=movie["Скачать"])  # Ссылка из словаря
+            markup.add(button1, button2)
+            markup.add(button3, button4)
 
-        bot.send_message(message.chat.id, response, reply_markup=markup)
-    else:
-        bot.send_message(message.chat.id, "Фильм не был найден", reply_markup=markup)
-
+            bot.send_message(message.chat.id, response, reply_markup=markup)
+        else:
+            bot.send_message(message.chat.id, "Фильм не был найден", reply_markup=markup)
+    else:  
+        bot.send_message(chat_id, "Подпишитесь на канал, чтобы использовать бота.", reply_markup=start_markup())
+        
 def tgk(message):
     # Тут оставим ссылку на наш приватный тг канал
     markup = types.InlineKeyboardMarkup(row_width=1)
